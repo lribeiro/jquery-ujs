@@ -93,16 +93,17 @@
     },
 
     // Submits "remote" forms and links with ajax
-    handleRemote: function(element) {
-      var method, url, data,
+    handleRemote: function(element, data) {
+      var method, url, 
         dataType = element.data('type') || ($.ajaxSettings && $.ajaxSettings.dataType);
+	data = data || [];
 
       if (rails.fire(element, 'ajax:before')) {
 
         if (element.is('form')) {
           method = element.attr('method');
           url = element.attr('action');
-          data = element.serializeArray();
+          data = element.serializeArray().concat(data);
           // memoized value from clicked submit button
           var button = element.data('ujs:submit-button');
           if (button) {
@@ -112,7 +113,6 @@
         } else {
           method = element.data('method');
           url = element.attr('href');
-          data = null;
         }
 
         rails.ajax({
